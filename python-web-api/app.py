@@ -13,7 +13,7 @@ def not_found_page(error):
 
 @app.route("/")
 def index():
-    content_url = url_for("read_content", title="novidades de 2024")
+    content_url = url_for("read_content", title="Novidades de 2024")
     return (
         f"<h1>{app.config['APP_NAME']}</h1>"
         f"<a href='{content_url}'>Novidades de 2024</a>"
@@ -21,11 +21,11 @@ def index():
     )
 
 
-
-def read_content():
+@app.route("/<title>")
+def read_content(title):
     index_url = url_for("index")
-    return "<h1>title</h1> <a href='{index_url}'>Votar</a>"
+    return "<h1>{title}</h1> <a href='{index_url}'>Votar</a>"
 
 
 
-app.add_url_rule("/<title>", view_func=read_content)
+#app.add_url_rule("/<string:title>", view_func=read_content)
