@@ -1,4 +1,4 @@
-from flask import Flask, url_for
+from flask import Flask, url_for, request
 
 app = Flask(__name__)
 
@@ -18,6 +18,7 @@ def index():
         f"<h1>{app.config['APP_NAME']}</h1>"
         f"<a href='{content_url}'>Novidades de 2024</a>"
         "<hr>"
+        f"{request.method}"
     )
 
 
@@ -25,6 +26,11 @@ def index():
 def read_content(title):
     index_url = url_for("index")
     return "<h1>{title}</h1> <a href='{index_url}'>Votar</a>"
+
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
 
 
 
