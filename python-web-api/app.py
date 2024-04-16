@@ -29,9 +29,6 @@ def read_content(title):
 
 
 
+# executar dentro do bloco
 if __name__ == "__main__":
     app.run(debug=True)
-
-
-
-#app.add_url_rule("/<string:title>", view_func=read_content)
