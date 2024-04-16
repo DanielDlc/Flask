@@ -3,9 +3,9 @@ from datetime import datetime
 from blog.database import mongo
 
 
-def get_all_posts(publish: bool =True):
-    ...
-
+def get_all_posts(published: bool =True):
+    posts = mongo.db.posts.find({"published": published})
+    return posts.sort("date")
 
 def get_post_by_slug(slug: str) -> dict:
     """
