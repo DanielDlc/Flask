@@ -3,22 +3,20 @@ from datetime import datetime
 from blog.database import mongo
 
 
-
 def get_all_posts(published: bool =True):
     posts = mongo.db.posts.find({"published": published})
     return posts.sort("date")
 
 
 def get_post_by_slug(slug: str) -> dict:
-    """
-    /novidades-de-2024 
-    """
-    post = mongo.db.posts.find_one("slug": slug)
+    post = mongo.db.posts.find_one({"slug": slug})
     return post
 
 
 def update_post_by_slug(slug: str, data: dict) -> dict:
-    ...
+    # TODO: seo título mudar, atualizar o slug (falhar se ja desistir)
+    return mongo.db.posts.find_one_and_update({"slug": slug}, {"$set": data})
+
 
 
 def new_post(title: str, content: str, published: bool = True) -> str:
