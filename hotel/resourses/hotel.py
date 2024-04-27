@@ -1,5 +1,4 @@
 from flask_restful import Resource, reqparse
-from flask import jsonify
 
 
 hoteis = [
@@ -33,20 +32,28 @@ class Hoteis(Resource):
         return {'hoteis': hoteis}
     
 class Hotel(Resource):
-    def get(self, hotel_id):
+    argumentos = reqparse.RequestParser()
+    argumentos.add_argument('nome', type=str, required=True)
+    argumentos.add_argument('estrelas', type=float, required=True)
+    argumentos.add_argument('diaria', type=float, required=True)
+    argumentos.add_argument('cidade', type=str, required=True)
+
+    def find_hotel(hotel_id):
         for hotel in hoteis:
             if hotel['hotel_id'] == hotel_id:
                 return hotel
+        return None
+
+
+    def get(self, hotel_id):
+        hotel = Hotel.find_hotel(hotel_id)
+        if hotel:
+            return hotel
         return {'message': 'Hotel not found!'}, 404 # Não encontrado
 
     def post(self, hotel_id):
-        argumentos = reqparse.RequestParser()
-        argumentos.add_argument('nome', type=str, required=True)
-        argumentos.add_argument('estrelas', type=float, required=True)
-        argumentos.add_argument('diaria', type=float, required=True)
-        argumentos.add_argument('cidade', type=str, required=True)
 
-        dados = argumentos.parse_args()
+        dados = Hotel.argumentos.parse_args()
 
         novo_hotel = {
             'hotel_id': hotel_id,
@@ -57,12 +64,21 @@ class Hotel(Resource):
         }
 
         hoteis.append(novo_hotel)
-
-        return {'hotel': novo_hotel}, 200
+        return {'hotel': novo_hotel}, 200 # ok
 
 
     def put(self, hotel_id):
-        pass
+
+        dados = Hotel.argumentos.parse_args()
+        novo_hotel = { 'hotel_id': hotel_id, **dados }
+        
+        hotel = Hotel.find_hotel(hotel_id)
+        if hotel:
+            hotel.update(novo_hotel)
+            return novo_hotel, 200 # ok
+        
+        hoteis.append(novo_hotel)
+        return novo_hotel, 201 #created 
 
     def delete(self, hotel_id):
         pass
