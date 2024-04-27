@@ -1,4 +1,5 @@
-from flask_restful import Resource
+from flask_restful import Resource, reqparse
+from flask import jsonify
 
 
 hoteis = [
@@ -39,7 +40,26 @@ class Hotel(Resource):
         return {'message': 'Hotel not found!'}, 404 # Não encontrado
 
     def post(self, hotel_id):
-        pass
+        argumentos = reqparse.RequestParser()
+        argumentos.add_argument('nome', type=str, required=True)
+        argumentos.add_argument('estrelas', type=float, required=True)
+        argumentos.add_argument('diaria', type=float, required=True)
+        argumentos.add_argument('cidade', type=str, required=True)
+
+        dados = argumentos.parse_args()
+
+        novo_hotel = {
+            'hotel_id': hotel_id,
+            'nome': dados['nome'],
+            'estrelas': str(dados['estrelas']),
+            'diaria': str(dados['diaria']),
+            'cidade': dados['cidade']
+        }
+
+        hoteis.append(novo_hotel)
+
+        return {'hotel': novo_hotel}, 200
+
 
     def put(self, hotel_id):
         pass
